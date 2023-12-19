@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>战渊GeminiProChat</title>
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg"
+        type="image/x-icon">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,200;0,400;0,800;1,200;1,400;1,800&display=swap');
+
+    @import url('https://fonts.googleapis.com/css2?family=Product+Sans&family=Google+Sans+Display:ital@0;1&family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Google+Sans+Text:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Material+Symbols+Outlined&family=Space+Mono&display=swap');
+
+
+    body {
+        font-family: 'Noto Sans', sans-serif;
+        font-size: 1rem;
+    }
+
+    p {
+        margin: 0;
+        margin-bottom: 0.5rem;
+        padding: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    ol,
+    ul {
+        margin: 0;
+    }
+
+    h1 {
+        margin-bottom: 0.5rem;
+    }
+
+    a {
+        color: #3b82f6;
+    }
+
+    input,
+    textarea,
+    select {
+        border: 1px solid;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-family: noto sans, sans-serif;
+    }
+
+    .prompt-field {
+        resize: vertical;
+        height: 7rem;
+    }
+
+    .container {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .sidebar {
+        position: sticky;
+        top: 1rem;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        gap: 0.5rem;
+        padding: 1rem;
+        min-width: 25rem;
+        border-radius: 1rem;
+        scrollbar-width: thin;
+        height: calc(100dvh - 4rem);
+    }
+
+    .sidebar-section {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        font-size: 2rem;
+        font-weight: 800;
+        gap: 0.5rem;
+    }
+
+    .navbar {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        border-radius: 0.5rem;
+        justify-content: space-evenly;
+        margin-bottom: 1rem;
+        z-index: 0;
+    }
+
+    .navbar-tab {
+        width: 100%;
+        padding: 0.5rem;
+        text-align: center;
+        cursor: pointer;
+        z-index: 2;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+
+
+    .navbar-tab-highlight {
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+        height: 100%;
+        z-index: 1;
+        /* glow */
+        box-shadow: 0 0 1rem 0.05rem #29292a3f;
+    }
+
+    #gemini-pro-branding {
+        font-family: Google Sans Display, sans-serif;
+        color: #7c8a9c;
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    #gemin-pro-logo {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .credits {
+        margin-top: auto;
+        display: flex;
+        padding: 0rem 1rem 0 1rem;
+
+        font-size: 0.75rem;
+        color: #7c8a9c;
+
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .generate-button {
+        border: none;
+        background-color: #3b82f6;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+    }
+
+    .result-text {
+        padding: 2rem;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 32rem;
+        text-align: justify;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .container {
+            padding: 0;
+            flex-direction: column;
+            width: auto;
+        }
+
+        .sidebar {
+            height: auto;
+            margin: 0;
+            min-width: auto;
+            position: initial;
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .navbar {
+            position: relative;
+        }
+
+        .result-text {
+            max-width: 100%;
+        }
+    }
+
+    /* Light theme styles */
+    @media (prefers-color-scheme: light) {
+        :focus {
+            outline: 1px solid #8f9eb3;
+        }
+
+        body {
+            background-color: #f0f6ff;
+            color: #0a0a0a;
+        }
+
+        a {
+            color: #444ed6;
+        }
+
+        .sidebar {
+            background-color: #d2e2f7;
+        }
+
+        .navbar {
+            background-color: rgb(176 205 246);
+        }
+
+        .navbar-tab {
+            color: #0a0a0a;
+        }
+
+        .navbar-tab-highlight {
+            background-color: #87b0ed;
+        }
+
+        .generate-button {
+            background-color: #87b0ed;
+            color: #2b3d59;
+        }
+
+        .generate-button:hover {
+            background-color: #0b7bc1;
+            color: white;
+        }
+
+        input,
+        textarea,
+        select {
+            background-color: #f0f6ff;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #7c8a9c;
+        }
+    }
+
+    /* Dark theme styles */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            color-scheme: dark;
+        }
+
+        :focus {
+            outline: 1px solid #73859e;
+        }
+
+
+
+        body {
+            background-color: #151e24;
+            color: #e4e4e4;
+        }
+
+        a {
+            color: #92d9eb;
+        }
+
+        .sidebar {
+            background-color: #1a2733;
+        }
+
+        .navbar {
+            background-color: #111f2d;
+        }
+
+        .navbar-tab {
+            color: #e4e4e4;
+        }
+
+        .navbar-tab-highlight {
+            background-color: #22486b;
+
+            box-shadow: 0 0 1rem 0.05rem #29292aac;
+        }
+
+        .generate-button {
+            background-color: #22486b;
+            color: #e4e4e4;
+        }
+
+        .generate-button:hover {
+            background-color: #224c8f;
+            color: white;
+        }
+
+        input,
+        textarea,
+        select {
+            background-color: #283542;
+
+            color: #e4e4e4;
+            border: none;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #849caf;
+        }
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" id="gemin-pro-logo">
+                <div id="title-div">
+                    <div id="zodiac-branding">GeminiProChat</div>
+                    <div id="gemini-pro-branding">powered by Gemini Pro</div>
+                </div>
+            </div>
+            <div class="navbar">
+                <div class="navbar-tab">生成</div>
+                <div class="navbar-tab">对话</div>
+                <div class="navbar-tab">设置</div>
+                <div class="navbar-tab-highlight"></div>
+            </div>
+            <div class="sidebar-section">
+
+
+                <textarea id="inputText" placeholder="在这里输入你想说的话" class="prompt-field"></textarea>
+                <button id="generate" class="generate-button">生成</button>
+            </div>
+
+            <div class="sidebar-section">
+
+            </div>
+
+            <div class="sidebar-section">
+                <input type="text" placeholder="Paste API key here" id="apiKeyInput" class="input-field"></input>
+                <h3>生成设置:</h3>
+                <label for="maxTokens">最大输出Token:</label>
+                <input type="number" id="maxTokens" class="input-field" min="1" max="4000" value="1000"></input>
+                <label for="safetySettings">安全设置:</label>
+                <select id="safetySettings" class="input-field">
+                    <option value="safe">安全</option>
+                    <option value="moderate">温和</option>
+                    <option value="risky">危险</option>
+                </select>
+            </div>
+
+            <div class="credits">
+                Made by 战渊
+                <!-- <a href="https://github.com/faetalize/zodiac">Source Code</a> -->
+            </div>
+        </div>
+        <div id="resultText" class="result-text"></div>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+
+    <script type="module">
+        import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+        import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
+
+        const safetySettings = [
+
+            {
+                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+            },
+            {
+                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold: HarmBlockThreshold.BLOCK_NONE,
+            }
+        ];
+
+        //function to hide element smoothly then setting display none after the transition time elapsed
+        function hideElement(element) {
+            element.style.transition = 'opacity 0.2s';
+            element.style.opacity = '0';
+            setTimeout(function () {
+                element.style.display = 'none';
+            }, 200);
+        }
+
+        function showElement(element) {
+            // Wait for other transitions to complete (0.5s delay)
+            setTimeout(function () {
+                // Change display property
+                element.style.display = 'flex';
+                // Wait for next frame for display change to take effect
+                requestAnimationFrame(function () {
+                    // Start opacity transition
+                    element.style.transition = 'opacity 0.2s';
+                    element.style.opacity = '1';
+                });
+            }, 200);
+        }
+
+
+        const tabs = document.querySelectorAll(".navbar-tab");
+        const sidebarViews = document.querySelectorAll(".sidebar-section");
+        const highlight = document.querySelector(".navbar-tab-highlight");
+        highlight.style.width = `calc(100% / ${tabs.length})`;
+
+
+        let currentTab = undefined;
+
+        function navigateTo(tab) {
+            if (tab == tabs[currentTab]) {
+                return;
+            }
+            // set the highlight to match the size of the tab element
+
+
+            let tabIndex = [...tabs].indexOf(tab);
+            if (tabIndex < 0 || tabIndex >= sidebarViews.length) {
+                console.error("Invalid tab index: " + tabIndex);
+                return;
+            }
+
+            if (currentTab != undefined) {
+                hideElement(sidebarViews[currentTab]);
+            }
+            showElement(sidebarViews[tabIndex]);
+            currentTab = tabIndex;
+
+            highlight.style.left = `calc(100% / ${tabs.length} * ${tabIndex})`;
+
+        }
+
+        tabs.forEach(element => {
+            element.addEventListener("click", () => {
+                navigateTo(element);
+            })
+        });
+
+        sidebarViews.forEach(view => {
+            if (view != sidebarViews[0]) {
+                hideElement(view);
+            }
+        });
+
+        navigateTo(tabs[0]);
+
+        const systemPrompt = "[System]: You are zodiac, a helpful assistant built upon Google's Gemini Pro." +
+            "Gemini Pro is a new LLM (Large Language Model) release by Google on December 2023. If needed, format your answer using markdown." +
+            "Your purpose is being a helpful assistant to the user." +
+            "Today's date is" + new Date().toDateString() + "." +
+            "End of system prompt. [/System]";
+
+
+
+
+        async function run() {
+            const inputText = document.querySelector("#inputText");
+            const resultText = document.querySelector("#resultText");
+            const maxTokens = document.querySelector("#maxTokens");
+            const API_KEY = document.querySelector("#apiKeyInput");
+
+            if (API_KEY.value == "") {
+                alert("Please enter an API key");
+                return;
+            }
+
+            const generationConfig = {
+                maxOutputTokens: maxTokens.value,
+                temperature: 0.9
+            };
+            const genAI = new GoogleGenerativeAI(API_KEY.value);
+            const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig, safetySettings });
+            const prompt = systemPrompt + "\n\n" + inputText.value;
+            const result = await model.generateContentStream(prompt);
+
+            resultText.innerHTML = '';
+            let rawText = "";
+
+            for await (const chunk of result.stream) {
+                console.log(chunk);
+                const chunkText = chunk.text();
+                rawText += chunkText;
+                resultText.innerHTML = marked.parse(rawText);
+
+                hljs.highlightAll();
+            }
+        }
+
+        // Call the run function when the generate button is clicked
+        const generateButton = document.querySelector("#generate");
+        generateButton.addEventListener("click", run);
+
+        // ...
+    </script>
+
+</body>
+
+</html>
